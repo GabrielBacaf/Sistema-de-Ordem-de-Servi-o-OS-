@@ -10,4 +10,11 @@
         <maven.compiler.release>24</maven.compiler.release>
         <exec.mainClass>com.mycompany.appserviceorder.AppServiceOrder</exec.mainClass>
     </properties>
+    <dependencies>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>2.2.224</version> <!-- use a versão mais recente -->
+        </dependency>
+    </dependencies>
 </project>

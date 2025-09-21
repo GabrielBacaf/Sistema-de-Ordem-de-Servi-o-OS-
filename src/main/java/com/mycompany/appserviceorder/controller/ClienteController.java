@@ -23,18 +23,18 @@ public class ClienteController {
 
     public void cadastrarCliente(ClienteDTO dto) {
         Cliente cliente = new Cliente(dto.getNome(), dto.getEmail(), dto.getTelefone(), dto.getCpf());
-        clienteService.salvar(cliente);
+        clienteService.salvarCliente(cliente);
     }
 
     public List<Cliente> listarClientes() {
-        return clienteService.listar();
+        return clienteService.listarClientes();
     }
 
     public Cliente buscarCliente(String cpf) {
-        return clienteService.buscarPorCpf(cpf);
+        return clienteService.buscarClientePorCpf(cpf);
     }
 
     public void excluirCliente(String cpf) {
-        clienteService.remover(cpf);
+        clienteService.removerClientePorCpf(cpf);
     }
 }
