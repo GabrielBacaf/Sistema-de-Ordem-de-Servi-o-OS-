@@ -26,7 +26,6 @@ public class ClienteService {
             inserirClienteEspecifico(cliente, conexao);
 
             conexao.commit();
-            System.out.println("Cliente salvo com sucesso!");
 
         } catch (SQLException e) {
             System.err.println("Erro ao salvar cliente: " + e.getMessage());
