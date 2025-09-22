@@ -1,1 +1,8 @@
 /target/
+*.mv.db
+*.trace.db
+*.db
+
+# Logs
+*.log
+
