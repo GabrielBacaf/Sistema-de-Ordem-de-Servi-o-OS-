@@ -49,7 +49,7 @@ public class CriandoTabelas {
                     + "id INT AUTO_INCREMENT PRIMARY KEY,"
                     + "descricao VARCHAR(500),"
                     + "cliente_id INT NOT NULL,"
-                    + "tecnico_id INT NOT NULL,"
+                    + "tecnico_id INT NULL,"
                     + "status VARCHAR(50),"
                     + "data_abertura TIMESTAMP,"
                     + "data_fechamento TIMESTAMP,"

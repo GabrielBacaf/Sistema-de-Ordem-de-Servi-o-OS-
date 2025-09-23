@@ -4,9 +4,6 @@
  */
 package com.mycompany.appserviceorder.view.ordemServico;
 
-
-
-
 import com.mycompany.appserviceorder.controller.OrdemServicoController;
 import com.mycompany.appserviceorder.dto.OrdemServicoDTO;
 import com.mycompany.appserviceorder.model.Cliente;
@@ -14,6 +11,7 @@ import com.mycompany.appserviceorder.service.ClienteService;
 import java.util.List;
 import javax.swing.JOptionPane;
 import java.util.logging.Logger;
+import javax.swing.JComboBox;
 
 /**
  *
@@ -21,33 +19,45 @@ import java.util.logging.Logger;
  */
 public class SolicitarServicoView extends javax.swing.JFrame {
 
-   private static final Logger logger = Logger.getLogger(SolicitarServicoView.class.getName());
+    private static final Logger logger = Logger.getLogger(SolicitarServicoView.class.getName());
     private final OrdemServicoController ordemController = new OrdemServicoController();
     private final ClienteService clienteService = new ClienteService();
 
-    // Combo de clientes
-    private javax.swing.JComboBox<Cliente> comboCliente;
+    // Combo de clientes customizado
+    private JComboBox<Cliente> comboCliente;
 
     public SolicitarServicoView() {
         initComponents();
         setLocationRelativeTo(null);
-
         carregarClientes();
-
         jButton1.addActionListener(e -> salvarSolicitacao());
     }
 
     private void carregarClientes() {
         List<Cliente> clientes = clienteService.listarClientes();
-        comboCliente.removeAllItems();
-        for (Cliente c : clientes) {
-            comboCliente.addItem(c);
+        jComboBox1.removeAllItems();
+
+        if (clientes == null || clientes.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Nenhum cliente encontrado. Cadastre um cliente antes de solicitar um serviço.",
+                    "Aviso",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            jButton1.setEnabled(false);
+            return;
         }
+
+        for (Cliente c : clientes) {
+            jComboBox1.addItem(c); // adiciona objeto Cliente inteiro
+        }
+
+        jButton1.setEnabled(true);
     }
 
     private void salvarSolicitacao() {
         try {
-            Cliente clienteSelecionado = (Cliente) comboCliente.getSelectedItem();
+            Cliente clienteSelecionado = (Cliente) jComboBox1.getSelectedItem();
             String descricao = jTextArea1.getText();
 
             if (clienteSelecionado == null) {
@@ -55,18 +65,9 @@ public class SolicitarServicoView extends javax.swing.JFrame {
                 return;
             }
 
-            OrdemServicoDTO dto = new OrdemServicoDTO(
-                    descricao,
-                    clienteSelecionado.getId(), // aqui vai o id para o controller
-                    null, 
-                    null,
-                    null,
-                    null,
-                    null,
-                    null
-            );
-
+            OrdemServicoDTO dto = new OrdemServicoDTO(descricao, clienteSelecionado);
             ordemController.cadastrarOrdem(dto);
+
             JOptionPane.showMessageDialog(this, "Solicitação salva com sucesso!");
             limparFormulario();
 
@@ -77,9 +78,10 @@ public class SolicitarServicoView extends javax.swing.JFrame {
 
     private void limparFormulario() {
         jTextArea1.setText("");
-        comboCliente.setSelectedIndex(0);
+        if (jComboBox1.getItemCount() > 0) {
+            jComboBox1.setSelectedIndex(0);
+        }
     }
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -90,25 +92,13 @@ public class SolicitarServicoView extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jFrame1 = new javax.swing.JFrame();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        jComboBox1 = new javax.swing.JComboBox<Cliente>();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
-
-        javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
-        jFrame1.getContentPane().setLayout(jFrame1Layout);
-        jFrame1Layout.setHorizontalGroup(
-            jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        jFrame1Layout.setVerticalGroup(
-            jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -125,7 +115,7 @@ public class SolicitarServicoView extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
         jLabel4.setText("Cliente");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.setToolTipText("");
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox1ActionPerformed(evt);
@@ -178,16 +168,16 @@ public class SolicitarServicoView extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(66, 66, 66)
+                .addGap(52, 52, 52)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(57, Short.MAX_VALUE))
+                .addContainerGap(71, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(40, 40, 40)
+                .addGap(16, 16, 16)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(57, Short.MAX_VALUE))
+                .addContainerGap(81, Short.MAX_VALUE))
         );
 
         pack();
@@ -224,8 +214,7 @@ public class SolicitarServicoView extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JFrame jFrame1;
+    private javax.swing.JComboBox<Cliente> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;

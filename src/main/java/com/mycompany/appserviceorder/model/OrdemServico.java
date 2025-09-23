@@ -7,7 +7,6 @@ package com.mycompany.appserviceorder.model;
 import com.mycompany.appserviceorder.model.enums.StatusOrdemEnum;
 import java.util.Date;
 
-
 /**
  *
  * @author Administrador
@@ -16,7 +15,7 @@ public class OrdemServico {
 
     private int id;
     private String descricao;
-    private int cliente;
+    private Cliente cliente;
     private Tecnico tecnico;
     private Servico servico;
     private Pagamento pagamento;
@@ -24,7 +23,7 @@ public class OrdemServico {
     private Date dataAbertura;
     private Date dataFechamento;
 
-    public OrdemServico(String descricao, int cliente, Tecnico tecnico, Servico servico, Pagamento pagamento, StatusOrdemEnum status, Date dataAbertura, Date dataFechamento) {
+    public OrdemServico(String descricao, Cliente cliente, Tecnico tecnico, Servico servico, Pagamento pagamento, StatusOrdemEnum status, Date dataAbertura, Date dataFechamento) {
         this.descricao = descricao;
         this.cliente = cliente;
         this.tecnico = tecnico;
@@ -33,6 +32,11 @@ public class OrdemServico {
         this.status = status;
         this.dataAbertura = dataAbertura;
         this.dataFechamento = dataFechamento;
+    }
+
+    public OrdemServico(String descricao, Cliente cliente) {
+        this.descricao = descricao;
+        this.cliente = cliente;
     }
 
     public int getId() {
@@ -51,11 +55,11 @@ public class OrdemServico {
         this.descricao = descricao;
     }
 
-    public int getCliente() {
+    public Cliente getCliente() {
         return cliente;
     }
 
-    public void setCliente(int cliente) {
+    public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
 

@@ -18,7 +18,7 @@ import java.util.Date;
 public class OrdemServicoDTO {
 
     private String descricao;
-    private int clienteId;
+    private Cliente clienteId;
     private Tecnico tecnicoId;
     private Servico servicoId;
     private Pagamento pagamentoId;
@@ -26,7 +26,7 @@ public class OrdemServicoDTO {
     private Date dataAbertura;
     private Date dataFechamento;
 
-    public OrdemServicoDTO(String descricao, int clienteId, Tecnico tecnicoId,
+    public OrdemServicoDTO(String descricao, Cliente clienteId, Tecnico tecnicoId,
             Servico servicoId, Pagamento pagamentoId,
             StatusOrdemEnum status, Date dataAbertura, Date dataFechamento) {
         this.descricao = descricao;
@@ -37,6 +37,11 @@ public class OrdemServicoDTO {
         this.status = status;
         this.dataAbertura = dataAbertura;
         this.dataFechamento = dataFechamento;
+    }
+
+    public OrdemServicoDTO(String descricao, Cliente clienteId) {
+        this.descricao = descricao;
+        this.clienteId = clienteId;
     }
 
     public String getDescricao() {
@@ -67,11 +72,11 @@ public class OrdemServicoDTO {
         return pagamentoId;
     }
 
-    public int getClienteId() {
+    public Cliente getClienteId() {
         return clienteId;
     }
 
-    public void setClienteId(int clienteId) {
+    public void setClienteId(Cliente clienteId) {
         this.clienteId = clienteId;
     }
 
@@ -82,8 +87,6 @@ public class OrdemServicoDTO {
     public void setTecnicoId(Tecnico tecnicoId) {
         this.tecnicoId = tecnicoId;
     }
-    
-    
 
     public void setPagamentoId(Pagamento pagamentoId) {
         this.pagamentoId = pagamentoId;

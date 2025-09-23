@@ -5,7 +5,6 @@
 package com.mycompany.appserviceorder.controller;
 
 import com.mycompany.appserviceorder.dto.OrdemServicoDTO;
-import com.mycompany.appserviceorder.model.Cliente;
 import com.mycompany.appserviceorder.model.OrdemServico;
 import com.mycompany.appserviceorder.service.OrdemService;
 import java.util.List;
@@ -26,13 +25,7 @@ public class OrdemServicoController {
         OrdemServico ordem;
         ordem = new OrdemServico(
                 dto.getDescricao(),
-                dto.getClienteId(), 
-                dto.getTecnicoId(), 
-                dto.getServicoId(),
-                dto.getPagamentoId(),
-                null, 
-                null, 
-                null 
+                dto.getClienteId()     
         );
         ordemService.salvarOrdem(ordem);
     }
