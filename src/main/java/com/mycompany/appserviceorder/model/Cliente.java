@@ -14,6 +14,10 @@ import com.mycompany.appserviceorder.model.enums.TipoUsuarioEnum;
 public class Cliente extends Pessoa {
 
     private String cpf;
+    
+    public Cliente(){
+        
+    }
 
     public Cliente(String nome, String email, String telefone, String cpf) {
         super(nome, email, telefone);

@@ -7,6 +7,7 @@ package com.mycompany.appserviceorder.view.cliente;
 import com.mycompany.appserviceorder.controller.ClienteController;
 import com.mycompany.appserviceorder.dto.ClienteDTO;
 import com.mycompany.appserviceorder.validation.ValidadorCliente;
+import com.mycompany.appserviceorder.view.index;
 import javax.swing.JOptionPane;
 
 /**
@@ -27,7 +28,7 @@ public class CadastroClienteView extends javax.swing.JFrame {
         jButton1.addActionListener(e -> {
             try {
                 ClienteDTO dto = getClienteFromForm();
-                ValidadorCliente.validar(dto); 
+                ValidadorCliente.validar(dto);
                 controller.cadastrarCliente(dto);
                 JOptionPane.showMessageDialog(this, "Cliente cadastrado com sucesso!");
                 limparFormulario();
@@ -72,6 +73,7 @@ public class CadastroClienteView extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jTextField4 = new javax.swing.JTextField();
         jTextField5 = new javax.swing.JTextField();
+        jButton2 = new javax.swing.JButton();
 
         javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
         jFrame1.getContentPane().setLayout(jFrame1Layout);
@@ -129,6 +131,15 @@ public class CadastroClienteView extends javax.swing.JFrame {
             }
         });
 
+        jButton2.setBackground(new java.awt.Color(188, 6, 6));
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
+        jButton2.setText("Voltar");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -149,11 +160,13 @@ public class CadastroClienteView extends javax.swing.JFrame {
                             .addComponent(jLabel1)
                             .addComponent(jLabel3)
                             .addComponent(jLabel4))
-                        .addContainerGap(157, Short.MAX_VALUE))))
+                        .addGap(38, 157, Short.MAX_VALUE))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1)
-                .addGap(38, 38, 38))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -174,9 +187,11 @@ public class CadastroClienteView extends javax.swing.JFrame {
                 .addComponent(jLabel4)
                 .addGap(8, 8, 8)
                 .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(5, 5, 5)
-                .addComponent(jButton1)
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -193,7 +208,7 @@ public class CadastroClienteView extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(63, 63, 63)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(121, Short.MAX_VALUE))
+                .addContainerGap(128, Short.MAX_VALUE))
         );
 
         pack();
@@ -214,6 +229,12 @@ public class CadastroClienteView extends javax.swing.JFrame {
     private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField5ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        index telaDeSolicitacao = new index();
+        telaDeSolicitacao.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -242,6 +263,7 @@ public class CadastroClienteView extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

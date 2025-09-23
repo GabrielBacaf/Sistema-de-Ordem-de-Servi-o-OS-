@@ -14,12 +14,18 @@ public class Servico {
     private String nome;
     private String descricao;
     private double valor;
+    
+    public Servico(){
+        
+    }
 
     public Servico(String nome, String descricao, double valor) {
         this.nome = nome;
         this.descricao = descricao;
         this.valor = valor;
     }
+    
+    
 
     public int getId() {
         return id;
