@@ -13,7 +13,11 @@ import com.mycompany.appserviceorder.util.Database;
 public class AppServiceOrder {
 
     public static void main(String[] args) {
-        Database.startWebServer();
+        Database.startDatabase();
         CriandoTabelas.criarTabelas();
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println("Finalizando a aplicação...");
+            Database.stopDatabase();
+        }));
     }
 }

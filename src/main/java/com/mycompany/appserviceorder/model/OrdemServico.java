@@ -6,7 +6,6 @@ package com.mycompany.appserviceorder.model;
 
 import com.mycompany.appserviceorder.model.enums.StatusOrdemEnum;
 import java.util.Date;
-import java.util.List;
 
 /**
  *
@@ -18,21 +17,26 @@ public class OrdemServico {
     private String descricao;
     private Cliente cliente;
     private Tecnico tecnico;
-    private List<Servico> servicos;
-    private List<Pagamento> pagamentos;
+    private Servico servico;
+    private Pagamento pagamento;
     private StatusOrdemEnum status;
     private Date dataAbertura;
     private Date dataFechamento;
 
-    public OrdemServico(String descricao, Cliente cliente, Tecnico tecnico, List<Servico> servicos, List<Pagamento> pagamentos, StatusOrdemEnum status, Date dataAbertura, Date dataFechamento) {
+    public OrdemServico(String descricao, Cliente cliente, Tecnico tecnico, Servico servico, Pagamento pagamento, StatusOrdemEnum status, Date dataAbertura, Date dataFechamento) {
         this.descricao = descricao;
         this.cliente = cliente;
         this.tecnico = tecnico;
-        this.servicos = servicos;
-        this.pagamentos = pagamentos;
+        this.servico = servico;
+        this.pagamento = pagamento;
         this.status = status;
         this.dataAbertura = dataAbertura;
         this.dataFechamento = dataFechamento;
+    }
+
+    public OrdemServico(String descricao, Cliente cliente) {
+        this.descricao = descricao;
+        this.cliente = cliente;
     }
 
     public int getId() {
@@ -67,20 +71,20 @@ public class OrdemServico {
         this.tecnico = tecnico;
     }
 
-    public List<Servico> getServicos() {
-        return servicos;
+    public Servico getServico() {
+        return servico;
     }
 
-    public void setServicos(List<Servico> servicos) {
-        this.servicos = servicos;
+    public void setServico(Servico servico) {
+        this.servico = servico;
     }
 
-    public List<Pagamento> getPagamentos() {
-        return pagamentos;
+    public Pagamento getPagamento() {
+        return pagamento;
     }
 
-    public void setPagamentos(List<Pagamento> pagamentos) {
-        this.pagamentos = pagamentos;
+    public void setPagamento(Pagamento pagamento) {
+        this.pagamento = pagamento;
     }
 
     public StatusOrdemEnum getStatus() {
@@ -106,4 +110,5 @@ public class OrdemServico {
     public void setDataFechamento(Date dataFechamento) {
         this.dataFechamento = dataFechamento;
     }
+
 }

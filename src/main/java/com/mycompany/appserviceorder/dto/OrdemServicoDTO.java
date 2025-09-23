@@ -4,9 +4,12 @@
  */
 package com.mycompany.appserviceorder.dto;
 
+import com.mycompany.appserviceorder.model.Cliente;
+import com.mycompany.appserviceorder.model.Pagamento;
+import com.mycompany.appserviceorder.model.Servico;
+import com.mycompany.appserviceorder.model.Tecnico;
 import com.mycompany.appserviceorder.model.enums.StatusOrdemEnum;
 import java.util.Date;
-import java.util.List;
 
 /**
  *
@@ -15,45 +18,34 @@ import java.util.List;
 public class OrdemServicoDTO {
 
     private String descricao;
-    private int clienteId;
-    private int tecnicoId;
-    private List<Integer> servicosIds;
-    private List<Integer> pagamentosIds;
+    private Cliente clienteId;
+    private Tecnico tecnicoId;
+    private Servico servicoId;
+    private Pagamento pagamentoId;
     private StatusOrdemEnum status;
     private Date dataAbertura;
     private Date dataFechamento;
 
-    public OrdemServicoDTO(String descricao, int clienteId, int tecnicoId,
-            List<Integer> servicosIds, List<Integer> pagamentosIds,
+    public OrdemServicoDTO(String descricao, Cliente clienteId, Tecnico tecnicoId,
+            Servico servicoId, Pagamento pagamentoId,
             StatusOrdemEnum status, Date dataAbertura, Date dataFechamento) {
         this.descricao = descricao;
         this.clienteId = clienteId;
         this.tecnicoId = tecnicoId;
-        this.servicosIds = servicosIds;
-        this.pagamentosIds = pagamentosIds;
+        this.servicoId = servicoId;
+        this.pagamentoId = pagamentoId;
         this.status = status;
         this.dataAbertura = dataAbertura;
         this.dataFechamento = dataFechamento;
     }
 
+    public OrdemServicoDTO(String descricao, Cliente clienteId) {
+        this.descricao = descricao;
+        this.clienteId = clienteId;
+    }
+
     public String getDescricao() {
         return descricao;
-    }
-
-    public int getClienteId() {
-        return clienteId;
-    }
-
-    public int getTecnicoId() {
-        return tecnicoId;
-    }
-
-    public List<Integer> getServicosIds() {
-        return servicosIds;
-    }
-
-    public List<Integer> getPagamentosIds() {
-        return pagamentosIds;
     }
 
     public StatusOrdemEnum getStatus() {
@@ -67,4 +59,37 @@ public class OrdemServicoDTO {
     public Date getDataFechamento() {
         return dataFechamento;
     }
+
+    public Servico getServicoId() {
+        return servicoId;
+    }
+
+    public void setServicoId(Servico servicoId) {
+        this.servicoId = servicoId;
+    }
+
+    public Pagamento getPagamentoId() {
+        return pagamentoId;
+    }
+
+    public Cliente getClienteId() {
+        return clienteId;
+    }
+
+    public void setClienteId(Cliente clienteId) {
+        this.clienteId = clienteId;
+    }
+
+    public Tecnico getTecnicoId() {
+        return tecnicoId;
+    }
+
+    public void setTecnicoId(Tecnico tecnicoId) {
+        this.tecnicoId = tecnicoId;
+    }
+
+    public void setPagamentoId(Pagamento pagamentoId) {
+        this.pagamentoId = pagamentoId;
+    }
+
 }

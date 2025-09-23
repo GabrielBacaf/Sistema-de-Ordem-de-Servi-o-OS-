@@ -8,8 +8,8 @@ import com.mycompany.appserviceorder.model.enums.TipoUsuarioEnum;
  * @author GabrielBaca
  */
 public abstract class Pessoa {
-    
-    private int id;  
+
+    private int id;
     private String nome;
     private String email;
     private String telefone;
@@ -50,7 +50,6 @@ public abstract class Pessoa {
     public void setId(int id) {
         this.id = id;
     }
-    
 
     public void setEmail(String email) {
         this.email = email;
@@ -70,5 +69,10 @@ public abstract class Pessoa {
 
     public void setTipo(TipoUsuarioEnum tipo) {
         this.tipo = tipo;
+    }
+
+    @Override
+    public String toString() {
+        return this.nome;
     }
 }

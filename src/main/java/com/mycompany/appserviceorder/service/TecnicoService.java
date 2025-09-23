@@ -37,6 +37,7 @@ public class TecnicoService {
         List<Tecnico> tecnicos = new ArrayList<>();
         String sql = "SELECT p.id, p.nome, p.email, p.telefone, t.matricula, p.tipo_setor "
                 + "FROM pessoa p JOIN tecnico t ON p.id = t.id";
+        
 
         try (Connection conexao = Database.getConnection(); PreparedStatement stmt = conexao.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
 
