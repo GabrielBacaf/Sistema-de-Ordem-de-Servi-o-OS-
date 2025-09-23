@@ -33,6 +33,7 @@ public class OrdemServico {
         this.dataAbertura = dataAbertura;
         this.dataFechamento = dataFechamento;
     }
+    
 
     public OrdemServico(String descricao, Cliente cliente) {
         this.descricao = descricao;

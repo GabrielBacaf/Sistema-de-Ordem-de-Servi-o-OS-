@@ -4,6 +4,7 @@
  */
 package com.mycompany.appserviceorder.service;
 
+import com.mycompany.appserviceorder.model.Cliente;
 import com.mycompany.appserviceorder.model.OrdemServico;
 import com.mycompany.appserviceorder.model.enums.StatusOrdemEnum;
 import com.mycompany.appserviceorder.util.Database;
@@ -26,26 +27,29 @@ public class OrdemService {
 
             stmt.setString(1, ordem.getDescricao());
             stmt.setObject(2, ordem.getCliente() != null ? ordem.getCliente().getId() : null, java.sql.Types.INTEGER);
-            stmt.setObject(3, null, java.sql.Types.INTEGER); 
-            stmt.setString(4, StatusOrdemEnum.SOLICITADA.name()); 
-            stmt.setObject(5, null, java.sql.Types.TIMESTAMP); 
-            stmt.setObject(6, null, java.sql.Types.TIMESTAMP); 
+            stmt.setObject(3, null, java.sql.Types.INTEGER);
+            stmt.setString(4, StatusOrdemEnum.SOLICITADA.name());
+            stmt.setTimestamp(5, new java.sql.Timestamp(System.currentTimeMillis()));
+            stmt.setObject(6, null, java.sql.Types.TIMESTAMP);
 
             stmt.executeUpdate();
 
             ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
-                ordem.setId(rs.getInt(1)); 
+                ordem.setId(rs.getInt(1));
             }
         } catch (SQLException e) {
             System.err.println("Erro ao salvar ordem: " + e.getMessage());
         }
     }
 
-   
     public List<OrdemServico> listarOrdens() {
         List<OrdemServico> ordens = new ArrayList<>();
-        String sql = "SELECT id, descricao, cliente_id, tecnico_id, status, data_abertura, data_fechamento FROM ordem_servico";
+          String sql = "SELECT os.id, os.descricao, os.status, os.data_abertura, os.data_fechamento, " +
+                 "os.cliente_id, p.nome as cliente_nome " + // Pedindo o ID e o Nome
+                 "FROM ordem_servico os " +
+                 "LEFT JOIN cliente c ON os.cliente_id = c.id " +
+                 "LEFT JOIN pessoa p ON c.id = p.id";
 
         try (Connection conexao = Database.getConnection(); PreparedStatement stmt = conexao.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
 
@@ -54,11 +58,11 @@ public class OrdemService {
             }
         } catch (SQLException e) {
             System.err.println("Erro ao listar ordens: " + e.getMessage());
+            e.printStackTrace();
         }
         return ordens;
     }
 
-    
     public void atualizarOrdem(OrdemServico ordem) {
         if (ordem.getTecnico() == null) {
             throw new IllegalArgumentException("Técnico é obrigatório ao atualizar a ordem de serviço.");
@@ -70,7 +74,7 @@ public class OrdemService {
 
             stmt.setString(1, ordem.getDescricao());
             stmt.setObject(2, ordem.getCliente() != null ? ordem.getCliente().getId() : null, java.sql.Types.INTEGER);
-            stmt.setInt(3, ordem.getTecnico().getId()); 
+            stmt.setInt(3, ordem.getTecnico().getId());
             stmt.setObject(4, ordem.getStatus() != null ? ordem.getStatus().name() : null, java.sql.Types.VARCHAR);
             stmt.setTimestamp(5, ordem.getDataAbertura() != null ? new java.sql.Timestamp(ordem.getDataAbertura().getTime()) : null);
             stmt.setTimestamp(6, ordem.getDataFechamento() != null ? new java.sql.Timestamp(ordem.getDataFechamento().getTime()) : null);
@@ -81,20 +85,25 @@ public class OrdemService {
             System.err.println("Erro ao atualizar ordem: " + e.getMessage());
         }
     }
-
+private OrdemServico construirOrdemDoResultSet(ResultSet rs) throws SQLException {
     
-    private OrdemServico construirOrdemDoResultSet(ResultSet rs) throws SQLException {
-        OrdemServico ordem = new OrdemServico(
-                rs.getString("descricao"),
-                null, 
-                null, 
-                null, 
-                null, 
-                rs.getString("status") != null ? StatusOrdemEnum.valueOf(rs.getString("status")) : null,
-                rs.getDate("data_abertura"),
-                rs.getDate("data_fechamento")
-        );
-        ordem.setId(rs.getInt("id"));
-        return ordem;
-    }
+    // 1. Crie o objeto Cliente primeiro
+    Cliente clienteDaOrdem = new Cliente();
+    clienteDaOrdem.setId(rs.getInt("cliente_id"));
+    clienteDaOrdem.setNome(rs.getString("cliente_nome"));
+    
+    // 2. Agora, use esse objeto Cliente ao construir a OrdemServico
+    OrdemServico ordem = new OrdemServico(
+        rs.getString("descricao"),
+        clienteDaOrdem, // <-- Não é mais null!
+        null,           // Tecnico ainda é null
+        null,           // Servico ainda é null
+        null,           // Pagamento ainda é null
+        rs.getString("status") != null ? StatusOrdemEnum.valueOf(rs.getString("status")) : null,
+        rs.getDate("data_abertura"),
+        rs.getDate("data_fechamento")
+    );
+    ordem.setId(rs.getInt("id"));
+    return ordem;
+}
 }

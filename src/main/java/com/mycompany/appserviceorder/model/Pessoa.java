@@ -21,6 +21,10 @@ public abstract class Pessoa {
         this.email = email;
         this.telefone = telefone;
     }
+    
+    public Pessoa(){
+        
+    }
 
     // Getters e Setters
     public String getNome() {

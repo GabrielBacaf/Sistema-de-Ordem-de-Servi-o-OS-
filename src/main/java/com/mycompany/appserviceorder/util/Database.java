@@ -15,7 +15,7 @@ import org.h2.tools.Server;
 
 public class Database {
 
-    private static final String URL = "jdbc:h2:tcp://localhost/./appserviceorder";
+     private static final String URL = "jdbc:h2:tcp://localhost/appserviceorder";
 
     private static Server webServer;
     private static Server tcpServer;
@@ -33,7 +33,11 @@ public class Database {
     public static void startDatabase() {
         try {
 
-            tcpServer = Server.createTcpServer("-tcp", "-tcpAllowOthers", "-tcpPort", "9092").start();
+            tcpServer = Server.createTcpServer(
+                    "-tcp", "-tcpAllowOthers", "-tcpPort", "9092", "-baseDir", "./"
+            ).start();
+            System.out.println("Servidor H2 TCP iniciado e escutando na porta 9092.");
+
             System.out.println("Servidor H2 TCP iniciado e escutando na porta 9092.");
 
             webServer = Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8082").start();
