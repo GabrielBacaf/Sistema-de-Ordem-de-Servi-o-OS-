@@ -5,6 +5,7 @@
 package com.mycompany.appserviceorder.model;
 
 import com.mycompany.appserviceorder.model.enums.StatusOrdemEnum;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -23,6 +24,10 @@ public class OrdemServico {
     private Date dataAbertura;
     private Date dataFechamento;
 
+    public OrdemServico() {
+
+    }
+
     public OrdemServico(String descricao, Cliente cliente, Tecnico tecnico, Servico servico, Pagamento pagamento, StatusOrdemEnum status, Date dataAbertura, Date dataFechamento) {
         this.descricao = descricao;
         this.cliente = cliente;
@@ -33,7 +38,6 @@ public class OrdemServico {
         this.dataAbertura = dataAbertura;
         this.dataFechamento = dataFechamento;
     }
-    
 
     public OrdemServico(String descricao, Cliente cliente) {
         this.descricao = descricao;
@@ -110,6 +114,22 @@ public class OrdemServico {
 
     public void setDataFechamento(Date dataFechamento) {
         this.dataFechamento = dataFechamento;
+    }
+
+    public String getDataAberturaFormatada() {
+        if (this.dataAbertura == null) {
+            return "";
+        }
+        SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        return formatador.format(this.dataAbertura);
+    }
+
+    public String getDataFechamentoFormatada() {
+        if (this.dataFechamento == null) {
+            return "";
+        }
+        SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        return formatador.format(this.dataFechamento);
     }
 
 }

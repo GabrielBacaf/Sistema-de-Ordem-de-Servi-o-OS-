@@ -7,6 +7,8 @@ package com.mycompany.appserviceorder.controller;
 import com.mycompany.appserviceorder.dto.OrdemServicoDTO;
 import com.mycompany.appserviceorder.model.OrdemServico;
 import com.mycompany.appserviceorder.service.OrdemService;
+import com.mycompany.appserviceorder.service.PagamentoService;
+import com.mycompany.appserviceorder.service.ServicoService;
 import java.util.List;
 
 /**
@@ -15,17 +17,15 @@ import java.util.List;
  */
 public class OrdemServicoController {
 
-    private final OrdemService ordemService;
-
-    public OrdemServicoController() {
-        this.ordemService = new OrdemService();
-    }
+    private final OrdemService ordemService = new OrdemService();
+    private final ServicoService servicoService = new ServicoService();
+    private final PagamentoService pagamentoService = new PagamentoService();
 
     public void cadastrarOrdem(OrdemServicoDTO dto) {
         OrdemServico ordem;
         ordem = new OrdemServico(
                 dto.getDescricao(),
-                dto.getClienteId()     
+                dto.getClienteId()
         );
         ordemService.salvarOrdem(ordem);
     }
@@ -33,19 +33,18 @@ public class OrdemServicoController {
     public List<OrdemServico> listarOrdens() {
         return ordemService.listarOrdens();
     }
-//
-//    public void atualizarOrdem(OrdemServicoDTO dto, int id) {
-//        OrdemServico ordem = new OrdemServico(
-//                dto.getDescricao(),
-//                new Cliente(dto.getClienteId()),
-//                new Tecnico(dto.getTecnicoId()),
-//                dto.getServicoId(),
-//                dto.getPagamentoId(),
-//                dto.getStatus(),
-//                dto.getDataAbertura(),
-//                dto.getDataFechamento()
-//        );
-//        ordem.setId(id);
-//        ordemService.atualizarOrdem(ordem);
-//    };
+
+    public void atualizarOrdemCompleta(OrdemServico ordem) {
+
+        ordemService.atualizarOrdem(ordem);
+
+        if (ordem.getServico() != null) {
+            servicoService.salvarServico(ordem.getServico(), ordem.getId());
+        }
+
+        if (ordem.getPagamento() != null) {
+            pagamentoService.salvarPagamento(ordem.getPagamento(), ordem.getId());
+        }
+    }
+
 }

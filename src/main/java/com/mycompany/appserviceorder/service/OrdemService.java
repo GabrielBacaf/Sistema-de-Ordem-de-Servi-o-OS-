@@ -6,6 +6,7 @@ package com.mycompany.appserviceorder.service;
 
 import com.mycompany.appserviceorder.model.Cliente;
 import com.mycompany.appserviceorder.model.OrdemServico;
+import com.mycompany.appserviceorder.model.Tecnico;
 import com.mycompany.appserviceorder.model.enums.StatusOrdemEnum;
 import com.mycompany.appserviceorder.util.Database;
 
@@ -45,15 +46,23 @@ public class OrdemService {
 
     public List<OrdemServico> listarOrdens() {
         List<OrdemServico> ordens = new ArrayList<>();
-          String sql = "SELECT os.id, os.descricao, os.status, os.data_abertura, os.data_fechamento, " +
-                 "os.cliente_id, p.nome as cliente_nome " + // Pedindo o ID e o Nome
-                 "FROM ordem_servico os " +
-                 "LEFT JOIN cliente c ON os.cliente_id = c.id " +
-                 "LEFT JOIN pessoa p ON c.id = p.id";
+
+        // ANTES, a SQL provavelmente não tinha os JOINS para o técnico.
+        // DEPOIS, a SQL completa e unificada fica assim:
+        String sql = "SELECT "
+                + "os.id, os.descricao, os.status, os.data_abertura, os.data_fechamento, "
+                + "c.id as cliente_id, p_cliente.nome as cliente_nome, "
+                + "t.id as tecnico_id, p_tecnico.nome as tecnico_nome "
+                + "FROM ordem_servico os "
+                + "LEFT JOIN cliente c ON os.cliente_id = c.id "
+                + "LEFT JOIN pessoa p_cliente ON c.id = p_cliente.id "
+                + "LEFT JOIN tecnico t ON os.tecnico_id = t.id "
+                + "LEFT JOIN pessoa p_tecnico ON t.id = p_tecnico.id";
 
         try (Connection conexao = Database.getConnection(); PreparedStatement stmt = conexao.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
+
                 ordens.add(construirOrdemDoResultSet(rs));
             }
         } catch (SQLException e) {
@@ -63,47 +72,109 @@ public class OrdemService {
         return ordens;
     }
 
-    public void atualizarOrdem(OrdemServico ordem) {
-        if (ordem.getTecnico() == null) {
-            throw new IllegalArgumentException("Técnico é obrigatório ao atualizar a ordem de serviço.");
-        }
-
-        String sql = "UPDATE ordem_servico SET descricao = ?, cliente_id = ?, tecnico_id = ?, status = ?, data_abertura = ?, data_fechamento = ? WHERE id = ?";
+    public OrdemServico buscarPorId(int id) {
+        String sql = "SELECT "
+                + "os.id, os.descricao, os.status, os.data_abertura, os.data_fechamento, "
+                + "c.id as cliente_id, p_cliente.nome as cliente_nome, "
+                + "t.id as tecnico_id, p_tecnico.nome as tecnico_nome "
+                + "FROM ordem_servico os "
+                + "LEFT JOIN cliente c ON os.cliente_id = c.id "
+                + "LEFT JOIN pessoa p_cliente ON c.id = p_cliente.id "
+                + "LEFT JOIN tecnico t ON os.tecnico_id = t.id "
+                + "LEFT JOIN pessoa p_tecnico ON t.id = p_tecnico.id "
+                + "WHERE os.id = ?"; // ✅ A LINHA QUE FALTAVA
 
         try (Connection conexao = Database.getConnection(); PreparedStatement stmt = conexao.prepareStatement(sql)) {
 
-            stmt.setString(1, ordem.getDescricao());
-            stmt.setObject(2, ordem.getCliente() != null ? ordem.getCliente().getId() : null, java.sql.Types.INTEGER);
-            stmt.setInt(3, ordem.getTecnico().getId());
-            stmt.setObject(4, ordem.getStatus() != null ? ordem.getStatus().name() : null, java.sql.Types.VARCHAR);
-            stmt.setTimestamp(5, ordem.getDataAbertura() != null ? new java.sql.Timestamp(ordem.getDataAbertura().getTime()) : null);
-            stmt.setTimestamp(6, ordem.getDataFechamento() != null ? new java.sql.Timestamp(ordem.getDataFechamento().getTime()) : null);
-            stmt.setInt(7, ordem.getId());
+            stmt.setInt(1, id);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+
+                    return construirOrdemDoResultSet(rs);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Erro ao buscar Ordem de Serviço por ID: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public void atualizarOrdem(OrdemServico ordem) {
+
+        StringBuilder sql = new StringBuilder("UPDATE ordem_servico SET ");
+        List<Object> params = new ArrayList<>();
+
+        if (ordem.getDescricao() != null && !ordem.getDescricao().isEmpty()) {
+            sql.append("descricao = ?, ");
+            params.add(ordem.getDescricao());
+        }
+        if (ordem.getTecnico() != null) {
+            sql.append("tecnico_id = ?, ");
+            params.add(ordem.getTecnico().getId());
+        }
+        if (ordem.getStatus() != null) {
+            sql.append("status = ?, ");
+            params.add(ordem.getStatus().name());
+        }
+        if (ordem.getDataFechamento() != null) {
+            sql.append("data_fechamento = ?, ");
+            params.add(new java.sql.Timestamp(ordem.getDataFechamento().getTime()));
+        }
+
+        if (params.isEmpty()) {
+            System.out.println("Nenhum campo para atualizar.");
+            return;
+        }
+        sql.setLength(sql.length() - 2);
+
+        sql.append(" WHERE id = ?");
+        params.add(ordem.getId());
+
+        try (Connection conexao = Database.getConnection(); PreparedStatement stmt = conexao.prepareStatement(sql.toString())) {
+
+            for (int i = 0; i < params.size(); i++) {
+                stmt.setObject(i + 1, params.get(i));
+            }
 
             stmt.executeUpdate();
+            System.out.println("Ordem de serviço atualizada com sucesso no banco.");
+
         } catch (SQLException e) {
             System.err.println("Erro ao atualizar ordem: " + e.getMessage());
+            e.printStackTrace();
         }
     }
-private OrdemServico construirOrdemDoResultSet(ResultSet rs) throws SQLException {
-    
-    // 1. Crie o objeto Cliente primeiro
-    Cliente clienteDaOrdem = new Cliente();
-    clienteDaOrdem.setId(rs.getInt("cliente_id"));
-    clienteDaOrdem.setNome(rs.getString("cliente_nome"));
-    
-    // 2. Agora, use esse objeto Cliente ao construir a OrdemServico
-    OrdemServico ordem = new OrdemServico(
-        rs.getString("descricao"),
-        clienteDaOrdem, // <-- Não é mais null!
-        null,           // Tecnico ainda é null
-        null,           // Servico ainda é null
-        null,           // Pagamento ainda é null
-        rs.getString("status") != null ? StatusOrdemEnum.valueOf(rs.getString("status")) : null,
-        rs.getDate("data_abertura"),
-        rs.getDate("data_fechamento")
-    );
-    ordem.setId(rs.getInt("id"));
-    return ordem;
-}
+
+    private OrdemServico construirOrdemDoResultSet(ResultSet rs) throws SQLException {
+
+        Cliente clienteDaOrdem = new Cliente();
+        clienteDaOrdem.setId(rs.getInt("cliente_id"));
+        clienteDaOrdem.setNome(rs.getString("cliente_nome"));
+
+        Tecnico tecnicoDaOrdem = null;
+        int tecnicoId = rs.getInt("tecnico_id");
+
+        if (!rs.wasNull()) {
+            tecnicoDaOrdem = new Tecnico();
+            tecnicoDaOrdem.setId(tecnicoId);
+            tecnicoDaOrdem.setNome(rs.getString("tecnico_nome"));
+        }
+
+        OrdemServico ordem = new OrdemServico(
+                rs.getString("descricao"),
+                clienteDaOrdem,
+                tecnicoDaOrdem,
+                null,
+                null,
+                rs.getString("status") != null ? StatusOrdemEnum.valueOf(rs.getString("status")) : null,
+                rs.getTimestamp("data_abertura"),
+                rs.getTimestamp("data_fechamento")
+        );
+
+        ordem.setId(rs.getInt("id"));
+        return ordem;
+    }
 }
