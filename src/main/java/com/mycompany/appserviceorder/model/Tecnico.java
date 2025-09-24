@@ -14,9 +14,14 @@ import com.mycompany.appserviceorder.model.enums.TipoUsuarioEnum;
 public class Tecnico extends Pessoa {
 
     private String matricula;
-    
-    public Tecnico(){
-        
+
+    public Tecnico() {
+
+    }
+
+    public Tecnico(int id) {
+        super();
+        this.setId(id);
     }
 
     public Tecnico(String nome, String email, String telefone, TipoSetorEnum setor, String matricula) {

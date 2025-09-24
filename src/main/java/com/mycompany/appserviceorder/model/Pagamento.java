@@ -17,6 +17,10 @@ public class Pagamento {
     private double valor;
     private Date data = new Date();
     private TipoPagamentoEnum tipoPagamento;
+    
+    public Pagamento(){
+        
+    }
 
     public Pagamento(double valor, TipoPagamentoEnum tipoPagamento) {
         this.valor = valor;
